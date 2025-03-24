@@ -137,3 +137,4 @@ feedback, contributing to make the project better.
 * Joe Ceklosky for his feedback and help on fixing RTC issues.
 * François Planque for his [extensive explanation about the Mega STE internal drive](https://www.fplanque.com/tech/retro/atari/atari-st-acsi2stm-mega-ste/)
 * Diego Parrilla for making the PCB much more reliable.
+* Christian Zietz for his expert insight on program loading and Alt-RAM.

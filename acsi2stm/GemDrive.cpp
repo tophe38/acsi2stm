@@ -1082,13 +1082,11 @@ void GemDrive::onBoot() {
     FsFile emutos = fs.open(ACSI_GEMDRIVE_LOAD_EMUTOS);
     uint32_t basepage;
     uint32_t result = loadPrg(emutos, ToLong(0), ToLong(0), basepage);
-    dbgHex(basepage," ");
     if(result == E_OK) {
-      dbg("successful\n");
+      dbg("Run EmuTOS\n");
       Pexec_4(ToLong(basepage));
       return;
     }
-    dbg("failed ");
   }
 #endif
 
@@ -1135,6 +1133,9 @@ void GemDrive::onInit(bool setBootDrive) {
   tosPrint("Running in PIO mode\r\n\n");
 #endif
 
+  // Set dmatop to phystop
+  dmatop = phystop();
+
   // Cache OSHEADER values
   os_beg = _sysbase();
   os_beg = readLongAt(os_beg + offsetof(OSHEADER, os_beg));
@@ -1177,7 +1178,7 @@ void GemDrive::onInit(bool setBootDrive) {
 #endif
 #if ! ACSI_PIO
   for(d = 0; d < driveCount; ++d)
-    if(Devices::sdSlots[d].mode == SdDev::ACSI )
+    if(Devices::sdSlots[d].mode == SdDev::ACSI)
       // Avoid conflicts with legacy drivers that don't respect _drvbits.
       firstDriveLetter = 'L';
 #endif
@@ -2251,9 +2252,12 @@ uint32_t GemDrive::loadPrg(FsFile &prgFile, Long cmdline, Long env, uint32_t &ba
   pd.p_blen = ph.ph_blen;
   sendAt(pd, basepage);
 
-  if(!(ph.ph_prgflags.bytes[3] & 1))
-    // FASTLOAD not set: clear BSS
+  if(ph.ph_prgflags.bytes[3] & 1)
+    // FASTLOAD set: clear BSS only
     clearAt(ph.ph_blen, pd.p_bbase);
+  else
+    // FASTLOAD not set: clear the whole program space
+    clearAt(pd.p_hitpa - pd.p_bbase, pd.p_bbase);
 
   // The relocation table itself starts with a 32-bit value which marks the
   // offset of the first value to be relocated relative to the start of the

@@ -462,4 +462,6 @@ void SysHook::sendCommandNoWait(int command, ToLong param)
   DmaPort::sendIrqFast(bytes, 5);
 }
 
+uint32_t SysHook::dmatop = 0x40000; // Default to 256k (minimum ST-RAM)
+
 // vim: ts=2 sw=2 sts=2 et

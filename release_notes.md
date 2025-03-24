@@ -1,5 +1,5 @@
-5.1b: Super Compact PCB, minor hardware revision, date bug fix
-==============================================================
+5.1b: Super Compact PCB, minor hardware revision, software bug fixes
+====================================================================
 
 A minor version that fixes small details and brings a new PCB.
 
@@ -43,6 +43,8 @@ Changes since 5.00
 
 * Fixed file date/time on non-GemDrive drives such as floppy or ACSI in GemDrive
   mode
+* Fixed GemDrive program loading, improves compatibility
+* Fixed incompatibility with Alt-RAM addons (MonSTEr, Magnum ST, Storm ST, ...)
 * Reworked components of the Compact PCB
   * Switched to 0805 components to make hand soldering easier
   * Use 12pF capacitors to improve 32kHz crystal stability. Fixes the "one out
